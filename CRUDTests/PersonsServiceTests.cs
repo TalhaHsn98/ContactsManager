@@ -1,4 +1,8 @@
-﻿using ServiceContracts;
+﻿using Entities;
+using Microsoft.EntityFrameworkCore;
+using ServiceContracts;
+using ServiceContracts.DTO;
+using ServiceContracts.Enums;
 using Services;
 using System;
 using System.Collections.Generic;
@@ -6,9 +10,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
-using ServiceContracts.DTO;
-using Entities;
-using ServiceContracts.Enums;
 using Xunit.Abstractions;
 
 namespace CRUDTests
@@ -19,10 +20,13 @@ namespace CRUDTests
         private readonly ICountriesService _countryService;
         private readonly ITestOutputHelper _testOutputHelper;
 
+        //constructor
         public PersonsServiceTests(ITestOutputHelper testOutputHelper)
         {
-            _personsService = new PersonsService(false);
-            _countryService = new CountriesService(false);
+            _countryService = new CountriesService(new PersonDbContext(new DbContextOptionsBuilder<PersonDbContext>().Options));
+
+            _personsService = new PersonsService(new PersonDbContext(new DbContextOptionsBuilder<PersonDbContext>().Options), _countryService);
+
             _testOutputHelper = testOutputHelper;
         }
 

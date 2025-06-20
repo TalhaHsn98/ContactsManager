@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Entities;
+using Microsoft.EntityFrameworkCore;
+using ServiceContracts;
+using ServiceContracts.DTO;
+using Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Entities;
-using ServiceContracts;
-using ServiceContracts.DTO;
-using Services;
 using Xunit;
 
 namespace CRUDTests
@@ -15,10 +16,12 @@ namespace CRUDTests
     {
         private readonly ICountriesService _countriesService;
 
+        //constructor
         public CountriesServiceTest()
         {
-            _countriesService = new CountriesService(false);
+            _countriesService = new CountriesService(new PersonDbContext(new DbContextOptionsBuilder<PersonDbContext>().Options));
         }
+
 
         #region AddCountry
         // Requirements
