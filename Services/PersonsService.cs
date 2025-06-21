@@ -5,6 +5,7 @@ using ServiceContracts;
 using System.ComponentModel.DataAnnotations;
 using Services.Helpers;
 using ServiceContracts.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services
 {
@@ -25,14 +26,7 @@ namespace Services
 
          
         }
-
-
-        private PersonResponse ConvertPersonToPersonResponse(Person person)
-        {
-            PersonResponse personResponse = person.ToPersonResponse();
-            personResponse.Country = _countriesService.GetCountryByCountryID(person.CountryID)?.CountryName;
-            return personResponse;
-        }
+        
 
         public PersonResponse AddPerson(PersonAddRequest? personAddRequest)
         {
@@ -57,13 +51,13 @@ namespace Services
             //_db.sp_InsertPerson(person);
 
             //convert the Person object into PersonResponse type
-            return ConvertPersonToPersonResponse(person);
+            return person.ToPersonResponse();
         }
 
         public List<PersonResponse> GetAllPersons()
         {
-            return _db.Persons.ToList()
-                .Select(temp => ConvertPersonToPersonResponse(temp)).ToList();
+            return _db.Persons.Include("Country").ToList()
+                .Select(temp => temp.ToPersonResponse()).ToList();
         }
 
         public PersonResponse? GetPersonByPersonID(Guid? personID)

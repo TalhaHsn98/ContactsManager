@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Entities
 {
@@ -32,5 +33,9 @@ namespace Entities
         public bool ReceiveNewsLetters { get; set; }
 
         public string? TIN {  get; set; }
+
+        [ForeignKey("CountryID")]
+
+        public virtual Country? Country { get; set; }    
     }
 }
