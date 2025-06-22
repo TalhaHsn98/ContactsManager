@@ -14,14 +14,14 @@ namespace ServiceContracts
         /// </summary>
         /// <param name="personAddRequest">Person to add</param>
         /// <returns>Returns the same person details, along with newly generated PersonID</returns>
-        PersonResponse AddPerson(PersonAddRequest? personAddRequest);
+        Task<PersonResponse> AddPerson(PersonAddRequest? personAddRequest);
 
 
         /// <summary>
         /// Returns all persons
         /// </summary>
         /// <returns>Returns a list of objects of PersonResponse type</returns>
-        List<PersonResponse> GetAllPersons();
+        Task<List<PersonResponse>> GetAllPersons();
 
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace ServiceContracts
         /// </summary>
         /// <param name="personID">Person id to search</param>
         /// <returns>Returns matching person object</returns>
-        PersonResponse? GetPersonByPersonID(Guid? personID);
+        Task<PersonResponse?> GetPersonByPersonID(Guid? personID);
 
 
         /// <summary>
@@ -38,12 +38,14 @@ namespace ServiceContracts
         /// <param name="searchBy">Search field to search</param>
         /// <param name="searchString">Search string to search</param>
         /// <returns>Returns all matching persons based on the given search field and search string</returns>
-        List<PersonResponse> GetFilteredPersons(string searchBy, string? searchString);
+        Task<List<PersonResponse>> GetFilteredPersons(string searchBy, string? searchString);
 
-        List<PersonResponse> GetSortedPersons(List<PersonResponse> allpersons, string sortBy, SortOrderOptions sortOrder);
+        Task<List<PersonResponse>> GetSortedPersons(List<PersonResponse> allpersons, string sortBy, SortOrderOptions sortOrder);
 
-        PersonResponse UpdatePerson(PersonUpdateRequest? personUpdateRequest);
+        Task<PersonResponse> UpdatePerson(PersonUpdateRequest? personUpdateRequest);
 
-        bool DeletePerson(Guid? personID);
+        Task<bool> DeletePerson(Guid? personID);
+
+        Task<MemoryStream> GetPersonsCSV();
     }
 }

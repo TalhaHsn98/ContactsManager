@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using Entities;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace Services
 {
@@ -19,7 +20,7 @@ namespace Services
             _db = db;
            
         }
-        public CountryResponse AddCountry(CountryAddRequest? countryAddREquest)
+        public async Task<CountryResponse> AddCountry(CountryAddRequest? countryAddREquest)
         {
 
             if (countryAddREquest == null) { 
@@ -30,7 +31,7 @@ namespace Services
                 throw new ArgumentException(nameof(countryAddREquest.CountryName)); 
             }
 
-            if (_db.Countries.Where(temp => temp.CountryName == countryAddREquest.CountryName).Count() > 0) {
+            if (await _db.Countries.Where(temp => temp.CountryName == countryAddREquest.CountryName).CountAsync() > 0) {
                 throw new ArgumentException("Given Country already in the list");
             }
 
@@ -39,20 +40,20 @@ namespace Services
             // guid
             country.CountryID = Guid.NewGuid();
             _db.Countries.Add(country);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return country.ToCountryResponse();
         }
 
-        public List<CountryResponse> GetAllCountries()
+        public async Task<List<CountryResponse>> GetAllCountries()
         {
-            return _db.Countries.Select(country => country.ToCountryResponse()).ToList();
+            return await _db.Countries.Select(country => country.ToCountryResponse()).ToListAsync();
         }
 
-        public CountryResponse GetCountryByCountryID(Guid? countryID)
+        public async Task<CountryResponse> GetCountryByCountryID(Guid? countryID)
         {
             if (countryID == null) return null;
 
-            Country? country_from_the_list = _db.Countries.FirstOrDefault(temp => temp.CountryID == countryID);
+            Country? country_from_the_list = await _db.Countries.FirstOrDefaultAsync(temp => temp.CountryID == countryID);
 
             if (country_from_the_list == null) return null;
 
