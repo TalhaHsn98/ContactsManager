@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using OfficeOpenXml;
+using Rotativa.AspNetCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Services;
-using Rotativa.AspNetCore;
 
 namespace CRUDExample.Controllers
 {
@@ -176,6 +177,15 @@ namespace CRUDExample.Controllers
             MemoryStream memoryStream = await _personsService.GetPersonsCSV();
 
             return File(memoryStream, "application/octet-stream", "person.csv");
+        }
+
+        [Route("PersonsExcel")]
+
+        public async Task<IActionResult> PersonsExcel()
+        {
+            ExcelPackage.License.SetNonCommercialPersonal("Talha");
+            MemoryStream memoryStream = await _personsService.GetPersonsExcel();
+            return File(memoryStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "persons.xlsx");
         }
 
 

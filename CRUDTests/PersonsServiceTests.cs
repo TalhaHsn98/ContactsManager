@@ -1,4 +1,6 @@
-﻿using Entities;
+﻿using AutoFixture;
+using Entities;
+using EntityFrameworkCoreMock;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
@@ -19,15 +21,31 @@ namespace CRUDTests
         private readonly IPersonsService _personsService;
         private readonly ICountriesService _countryService;
         private readonly ITestOutputHelper _testOutputHelper;
+        private readonly IFixture _fixture;
 
         //constructor
         public PersonsServiceTests(ITestOutputHelper testOutputHelper)
         {
-            _countryService = new CountriesService(new PersonDbContext(new DbContextOptionsBuilder<PersonDbContext>().Options));
+            var countriesInitialData = new List<Country>() { };
+            var personInitialData = new List<Person>() { };
 
-            _personsService = new PersonsService(new PersonDbContext(new DbContextOptionsBuilder<PersonDbContext>().Options), _countryService);
+
+            DbContextMock<ApplicationDbContext> dbContextMock = new DbContextMock<ApplicationDbContext>(
+                new DbContextOptionsBuilder<ApplicationDbContext>().Options
+                );
+
+            ApplicationDbContext dbContext = dbContextMock.Object;
+
+            dbContextMock.CreateDbSetMock(temp => temp.Countries, countriesInitialData);
+            dbContextMock.CreateDbSetMock(temp => temp.Persons, personInitialData);
+            _countryService = new CountriesService(dbContext);
+
+            _personsService = new PersonsService(dbContext, _countryService);
 
             _testOutputHelper = testOutputHelper;
+
+            _fixture = new Fixture();
+
         }
 
 
@@ -52,8 +70,10 @@ namespace CRUDTests
         public async Task AddPerson_PersonNameNull()
         {
             //Arrange
-            PersonAddRequest? personAddRequest = new PersonAddRequest() { PersonName = null };
-
+            PersonAddRequest? personAddRequest = _fixture.Build<PersonAddRequest>()
+                                                   .With(temp => temp.PersonName, null as string)
+                                                   .Create();
+               
             //Act
             await Assert.ThrowsAsync<ArgumentException>(async () =>
             {
@@ -67,8 +87,9 @@ namespace CRUDTests
         public async Task AddPerson_ProperPersonDetails()
         {
             //Arrange
-            PersonAddRequest? personAddRequest = new PersonAddRequest() { PersonName = "Person name...", Email = "person@example.com", Address = "sample address", CountryID = Guid.NewGuid(), Gender = GenderOptions.Male, DateOfBirth = DateTime.Parse("2000-01-01"), ReceiveNewsLetters = true };
-
+            PersonAddRequest? personAddRequest = _fixture.Build<PersonAddRequest>()
+                .With(temp => temp.Email, "someone@example.com")
+                .Create();   
             //Act
             PersonResponse person_response_from_add = await _personsService.AddPerson(personAddRequest);
 

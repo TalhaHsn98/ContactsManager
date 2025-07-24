@@ -1,4 +1,5 @@
-﻿using ServiceContracts.DTO;
+﻿using Microsoft.AspNetCore.Http;
+using ServiceContracts.DTO;
 
 namespace ServiceContracts
 {
@@ -16,5 +17,8 @@ namespace ServiceContracts
         Task<List<CountryResponse>> GetAllCountries();
 
         Task<CountryResponse> GetCountryByCountryID(Guid? countryID);
+
+        Task<int> UploadCountriesFromExcelFile(IFormFile formFile);
+
     }
 }
