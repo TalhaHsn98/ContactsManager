@@ -1,6 +1,7 @@
 ﻿using AutoFixture;
 using Entities;
 using EntityFrameworkCoreMock;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
@@ -256,10 +257,8 @@ namespace CRUDTests
             }
 
             //Assert
-            foreach (PersonResponse person_response_from_add in person_response_list_from_add)
-            {
-                Assert.Contains(person_response_from_add, persons_list_from_search);
-            }
+
+            persons_list_from_search.Should().BeEquivalentTo(person_response_list_from_add);
         }
 
 
@@ -308,16 +307,9 @@ namespace CRUDTests
             }
 
             //Assert
-            foreach (PersonResponse person_response_from_add in person_response_list_from_add)
-            {
-                if (person_response_from_add.PersonName != null)
-                {
-                    if (person_response_from_add.PersonName.Contains("ma", StringComparison.OrdinalIgnoreCase))
-                    {
-                        Assert.Contains(person_response_from_add, persons_list_from_search);
-                    }
-                }
-            }
+            
+
+            persons_list_from_search.Should().OnlyContain(temp => temp.PersonName.Contains("ma", StringComparison.OrdinalIgnoreCase));
         }
 
         #endregion
@@ -368,14 +360,9 @@ namespace CRUDTests
                 _testOutputHelper.WriteLine(person_response_from_get.ToString());
             }
 
-            person_response_list_from_add = person_response_list_from_add.OrderByDescending(temp => temp.PersonName).ToList();
+            
 
-            //Assert
-
-            for (int i = 0; i < persons_list_from_SortedMethod.Count; i++)
-            {
-                Assert.Equal(person_response_list_from_add[i], persons_list_from_SortedMethod[i]);
-            }            
+            persons_list_from_SortedMethod.Should().BeInDescendingOrder(temp => temp.PersonName);
 
         }
         #endregion
