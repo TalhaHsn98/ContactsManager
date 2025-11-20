@@ -16,7 +16,7 @@ namespace CRUDExample.Controllers
         private readonly ICountriesService _countryService;
         private readonly IPersonsService _personsService;
 
-        public PersonsController(ICountriesService countriesService, IPersonsService personsService)
+        public PersonsController(IPersonsService personsService, ICountriesService countriesService)
         {
             _countryService = countriesService;
             _personsService = personsService;
