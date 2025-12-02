@@ -15,11 +15,13 @@ namespace CRUDExample.Controllers
 
         private readonly ICountriesService _countryService;
         private readonly IPersonsService _personsService;
+        private readonly ILogger<PersonsController> _logger;
 
-        public PersonsController(IPersonsService personsService, ICountriesService countriesService)
+        public PersonsController(IPersonsService personsService, ICountriesService countriesService, ILogger<PersonsController> logger)
         {
             _countryService = countriesService;
             _personsService = personsService;
+            _logger = logger;
         }
 
         [Route("[action]")]

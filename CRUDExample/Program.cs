@@ -1,12 +1,17 @@
 using Entities;
+using Microsoft.EntityFrameworkCore;
+using Repositories;
+using RepositoryContracts;
+using Serilog;
 using ServiceContracts;
 using Services;
-using Microsoft.EntityFrameworkCore;
-using RepositoryContracts;
-using Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
+
+
+
+
 
 builder.Services.AddScoped<ICountriesService, CountriesService>();
 builder.Services.AddScoped<IPersonsService, PersonsService>();
@@ -23,8 +28,12 @@ if (builder.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-Rotativa.AspNetCore.RotativaConfiguration.Setup("wwwroot", wkhtmltopdfRelativePath: "Rotativa");
+app.Logger.LogCritical("it is not critical");
 
+
+
+if (builder.Environment.IsEnvironment("Test") == false)
+    Rotativa.AspNetCore.RotativaConfiguration.Setup("wwwroot", wkhtmltopdfRelativePath: "Rotativa");
 app.UseStaticFiles();
 app.UseRouting();
 app.MapControllers();
@@ -32,3 +41,5 @@ app.MapControllers();
 
 
 app.Run();
+
+public partial class Program { }
