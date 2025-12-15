@@ -23,6 +23,8 @@ builder.Services.AddControllersWithViews(options => {
         Order = 2
     });
 });
+builder.Services.AddTransient<PersonsListActionFilter>();
+
 
 
 
