@@ -8,12 +8,20 @@ using ServiceContracts;
 using Services;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddTransient<ResponseHeaderActionFilter>();
+
+//it adds controllers and views as services
 builder.Services.AddControllersWithViews(options => {
- //options.Filters.Add<ResponseHeaderActionFilter>();
+    //options.Filters.Add<ResponseHeaderActionFilter>(5);
 
- var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
+    var logger = builder.Services.BuildServiceProvider().GetRequiredService<ILogger<ResponseHeaderActionFilter>>();
 
- options.Filters.Add(new ResponseHeaderActionFilter(logger, "My-Key-From-Global", "My-Value-From-Global"));
+    options.Filters.Add(new ResponseHeaderActionFilter(logger)
+    {
+        Key = "My-Key-From-Global",
+        Value = "My-Value-From-Global",
+        Order = 2
+    });
 });
 
 
