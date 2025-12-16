@@ -1,4 +1,5 @@
 using CRUDExample.Filters.ActionFilters;
+using CRUDExample.Middleware;
 using Entities;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
@@ -44,7 +45,10 @@ if (builder.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
-
+else
+{
+    app.UseExceptionHandlingMiddleware();
+}
 app.Logger.LogCritical("it is not critical");
 
 
