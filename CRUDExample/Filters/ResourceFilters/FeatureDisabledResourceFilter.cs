@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CRUDExample.Filters.ResourceFilters
 {
-    public class FeatureDisabledResourceFilter
-    {
+
         public class FeatureDisabledResourceFilter : IAsyncResourceFilter
         {
             private readonly ILogger<FeatureDisabledResourceFilter> _logger;
@@ -37,5 +36,5 @@ namespace CRUDExample.Filters.ResourceFilters
                 _logger.LogInformation("{FilterName}.{MethodName} - after", nameof(FeatureDisabledResourceFilter), nameof(OnResourceExecutionAsync));
             }
         }
-    }
+    
 }
