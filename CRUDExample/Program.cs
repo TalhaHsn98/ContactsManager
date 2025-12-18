@@ -26,6 +26,13 @@ builder.Services.AddControllersWithViews(options => {
 });
 builder.Services.AddTransient<PersonsListActionFilter>();
 
+//Serilog
+builder.Host.UseSerilog((HostBuilderContext context, IServiceProvider services, LoggerConfiguration loggerConfiguration) => {
+
+    loggerConfiguration
+    .ReadFrom.Configuration(context.Configuration) //read configuration settings from built-in IConfiguration
+    .ReadFrom.Services(services); //read out current app's services and make them available to serilog
+});
 
 
 
