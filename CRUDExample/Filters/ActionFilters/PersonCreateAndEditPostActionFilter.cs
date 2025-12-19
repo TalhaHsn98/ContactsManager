@@ -10,6 +10,7 @@ namespace CRUDExample.Filters.ActionFilters
     public class PersonCreateAndEditPostActionFilter : IAsyncActionFilter
     {
         private readonly ICountriesService _countriesService;
+        private readonly ILogger _logger;
 
         public PersonCreateAndEditPostActionFilter(ICountriesService countriesService)
         {
